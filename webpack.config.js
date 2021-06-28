@@ -1,7 +1,9 @@
 const path = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
   mode: 'development',
@@ -16,6 +18,12 @@ module.exports = {
   devServer: {
     port: 4200,
     hot: true,
+  },
+  // devtool: 'source-map',
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    },
   },
   module: {
     rules: [
@@ -35,7 +43,8 @@ module.exports = {
       },
       {
         test: /\.(jpg|jpeg|ttf)$/,
-        use: ['file-loader'],
+        type: 'asset/resource',
+        // use: ['file-loader'], Webpack 4
       },
       {
         test: /\.xml$/,
@@ -48,6 +57,10 @@ module.exports = {
       template: './src/index.html',
     }),
     new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash].css',
+    }),
+    new CssMinimizerPlugin(),
+    new BundleAnalyzerPlugin(),
   ],
 }

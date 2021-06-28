@@ -1,12 +1,15 @@
 @import "./font.css";
 
+.font {
+  font-family: 'Jomhuria Regular';
+}
+
 .centered {
   display: flex;
   justify-content: center;
 
   color: darkorange;
   font-size: 48px;
-  font-family: 'Jomhuria Regular';
 }
 
 .over-garden-wall {
