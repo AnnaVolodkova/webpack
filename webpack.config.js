@@ -39,7 +39,17 @@ module.exports = {
       // },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        use: ['style-loader', 'css-loader'],
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: true,
+              reloadAll: true,
+            }
+          },
+          'css-loader'
+        ],
       },
       {
         test: /\.(jpg|jpeg|ttf)$/,
@@ -55,6 +65,9 @@ module.exports = {
   plugins: [
     new HTMLWebpackPlugin({
       template: './src/index.html',
+      // minify: {
+      //   collapseWhitespace: true,
+      // }
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
