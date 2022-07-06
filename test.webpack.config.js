@@ -1,32 +1,33 @@
-const path = require('path')
-const HTMLWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
   mode: 'development',
   entry: {
-    index: './src/index.js',
-    analytics: './src/analytics.js',
+    main: './src/index',
+    analytics: './src/analytics',
   },
   output: {
-    filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
+    filename: '[contenthash].[name].js',
+    clean: true,
   },
-  devServer: {
-    port: 4200,
-    hot: true,
-  },
-  // devtool: 'source-map',
   optimization: {
     splitChunks: {
-      chunks: 'all'
+      chunks: 'all',
     },
+    runtimeChunk: 'single'
+  },
+  // devtool: 'source-map',
+  devServer: {
+    port: 8080,
+    hot: true,
   },
   module: {
-    rules: [
+    rules: [ // loaders
       // {
       //   test: /\.js$/,
       //   exclude: /(node_modules)/,
@@ -38,6 +39,10 @@ module.exports = {
       //   }
       // },
       {
+        test: /\.xml$/i,
+        use: ['xml-loader'],
+      },
+      {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
@@ -46,21 +51,16 @@ module.exports = {
         type: 'asset/resource',
         // use: ['file-loader'], Webpack 4
       },
-      {
-        test: /\.xml$/,
-        use: ['xml-loader'],
-      },
-    ],
+    ]
   },
   plugins: [
-    new HTMLWebpackPlugin({
-      template: './src/index.html',
+    new HtmlWebpackPlugin({
+      template: './src/index.html'
     }),
-    new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css',
+      filename: '[contenthash].[name].css',
     }),
     new CssMinimizerPlugin(),
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
   ],
-}
+};
